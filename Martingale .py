@@ -29,7 +29,7 @@ print("Take profit: {}%".format(take_profit))
 print("Price scale: {}%".format(price_scale))
 print('\n')
 
-trades = TradesStructure()
+trades = TradesStructure(name='Martingale')
 min_lose = 0.0
 for idx in range(len(data)):
     close_price = data['close'][idx]
@@ -70,4 +70,9 @@ print("Biggest drawdown             : {:.2f}".format(min_lose))
 
 print("\nThanks to using ((Martingale))")
 
+
+trades.log("", 3)
+trades.log("Total profit in this strategy: {:.2f}".format(trades.total_profit()))
+trades.log("APR                          : {:.2f}%".format((trades.total_profit()/invesment)*100))
+trades.log("Biggest drawdown             : {:.2f}".format(min_lose))
 
