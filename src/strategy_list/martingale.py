@@ -65,7 +65,6 @@ class Martingale(Strategy):
         print("Total number of Rounds        : {}".format(self.num_rounds))
         print("\nThanks to using ((Martingale))")
 
-
         self.trades.log("", 2)
         self.trades.log("Total profit in this strategy : {:.2f}".format(self.trades.total_profit()))
         self.trades.log("APR                           : {:.2f}%".format((self.trades.total_profit()/self.invesment)*100))

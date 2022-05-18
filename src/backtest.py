@@ -1,13 +1,18 @@
 import pandas as pd 
 import numpy as np
-
+import os
 
 class TradesStructure():
     def __init__(self, name='Temp_name') -> None:
         self.open_positions   = {}
         self.closed_positions = {} # [open_index, , open_price, close_idx, close_price]
         self.profits          = []
-        self.log_file         = open("./inc/"+name+".txt", "w")
+
+        path = "./inc/"+name+".txt"
+        os.makedirs('./inc/', exist_ok=True)
+        self.log_file = open(path, "w")
+
+
     
     def __str__(self) -> str:
         return "-------- New Structure has been made -------- \n"

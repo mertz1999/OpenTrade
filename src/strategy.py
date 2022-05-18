@@ -21,6 +21,7 @@ class Strategy():
             self.algo(idx=idx, date=date, open_price=open_price, high_price=high_price, low_price=low_price, close_price=close_price)
 
         self.result_info()
+        self.trades.log_file.close()
 
     def get_params(self):
         pass
