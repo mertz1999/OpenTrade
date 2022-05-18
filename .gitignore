@@ -1,3 +1,5 @@
 src/__pycache__/*
 src/BTC_2020.csv
 inc/*
+__pycache__/*
+src/strategy_list/__pycache__/*
