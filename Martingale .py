@@ -9,10 +9,10 @@ data = pd.DataFrame(data.values[::-1], data.index, data.columns)
 
 
 # Martingle parameters
-take_profit = 1    # In percent
-price_scale = -1   # In Percent
+take_profit   = 1    # In percent
+price_scale   = -1   # In Percent
 safety_orders = 3 # We devide Invetment in 2^safety_orders parts
-invesment   = 700 # In $
+invesment     = 500 # In $
 
 
 share = invesment // (2 ** safety_orders)
@@ -31,11 +31,14 @@ print('\n')
 
 trades = TradesStructure(name='Martingale')
 min_lose = 0.0
+num_rounds = 0
+
 for idx in range(len(data)):
     close_price = data['close'][idx]
 
     # Check for zero position opening 
     if len(trades.open_positions) == 0:
+        num_rounds += 1
         print("-------------  Round Started {}-------------- \n".format(data['date'][idx]))
         trades.open(idx, close_price, Invertment_parts[0])
     
@@ -43,10 +46,11 @@ for idx in range(len(data)):
         # Check total profit
         total_online_profits = trades.total_online_profit(close_price)
         total_online_investment = trades.total_investment()
-        profit_in_percent = ((total_online_profits - total_online_investment) / total_online_investment) * 100
+        profit_in_percent = (total_online_profits / total_online_investment) * 100
         # Check min profit
         if profit_in_percent < min_lose:
             min_lose = profit_in_percent
+
         # Check take_profit threshold
         if profit_in_percent >= take_profit:
             trades.close_all(idx, close_price)

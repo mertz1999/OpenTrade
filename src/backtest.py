@@ -15,7 +15,7 @@ class TradesStructure():
     # Add new position
     def open(self, idx, price, amount):
         self.open_positions[idx] = [price, amount]
-        out_data = "(OPEN) {:.2f}$ in price ({:.2f})".format(amount, price, idx)
+        out_data = "(OPEN) {:.2f}$ in price {:.2f} ({:.2f})".format(amount, price, idx)
         self.log(out_data)
         print(out_data)
 
@@ -26,7 +26,7 @@ class TradesStructure():
         self.closed_positions[open_idx] = [open_idx, open_price, close_idx, close_price]
         result = ((close_price - open_price) / open_price) * amount
         self.profits.append(result)
-        out_data = "(CLOSE) Order closed with {:.1f}$ change. ({})".format(result, open_idx)
+        out_data = "(CLOSE) Order closed with {:.1f}$ change at price {:.2f} ({})".format(result, close_price, open_idx)
         self.log(out_data)
         print(out_data)
 
