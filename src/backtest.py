@@ -3,10 +3,11 @@ import numpy as np
 
 
 class TradesStructure():
-    def __init__(self) -> None:
+    def __init__(self, name='Temp_name') -> None:
         self.open_positions   = {}
         self.closed_positions = {} # [open_index, , open_price, close_idx, close_price]
         self.profits          = []
+        self.log_file         = open("./inc/"+name+".txt", "w")
     
     def __str__(self) -> str:
         return "-------- New Structure has been made -------- \n"
@@ -14,7 +15,9 @@ class TradesStructure():
     # Add new position
     def open(self, idx, price, amount):
         self.open_positions[idx] = [price, amount]
-        print("(OPEN) {:.2f}$ in price ({:.2f})".format(amount, price, idx))
+        out_data = "(OPEN) {:.2f}$ in price ({:.2f})".format(amount, price, idx)
+        self.log(out_data)
+        print(out_data)
 
     # Close a certain position
     def close(self, open_idx, close_idx, close_price):
@@ -23,7 +26,9 @@ class TradesStructure():
         self.closed_positions[open_idx] = [open_idx, open_price, close_idx, close_price]
         result = ((close_price - open_price) / open_price) * amount
         self.profits.append(result)
-        print("(CLOSE) Order closed with {:.1f}$ change. ({})".format(result, open_idx))
+        out_data = "(CLOSE) Order closed with {:.1f}$ change. ({})".format(result, open_idx)
+        self.log(out_data)
+        print(out_data)
 
     # Close all
     def close_all(self, close_idx, close_price):
@@ -58,10 +63,12 @@ class TradesStructure():
         
         return total
 
+    # Log function
+    def log(self,string, num_enter=1):
+        self.log_file.write(string)
+        for i in range(num_enter):
+            self.log_file.write('\n')
 
-class log(TradesStructure):
-    def print_t(self):
-        print("LOOK AT HERE")
 
 
 
