@@ -39,7 +39,8 @@ for idx in range(len(data)):
     # Check for zero position opening 
     if len(trades.open_positions) == 0:
         num_rounds += 1
-        print("-------------  Round Started {}-------------- \n".format(data['date'][idx]))
+        print("-------------  Round Started {} -------------- \n".format(data['date'][idx]))
+        trades.log("-------------  Round Started {} -------------- \n".format(data['date'][idx]),1)
         trades.open(idx, close_price, Invertment_parts[0])
     
     else:
@@ -55,6 +56,7 @@ for idx in range(len(data)):
         if profit_in_percent >= take_profit:
             trades.close_all(idx, close_price)
             print("\n")
+            trades.log('', 2)
             # break
         else:
             if len(trades.open_positions) < 4:
@@ -70,13 +72,15 @@ for idx in range(len(data)):
 print("\n-------------------- Results --------------------")
 print("Total profit in this strategy: {:.2f}".format(trades.total_profit()))
 print("APR                          : {:.2f}%".format((trades.total_profit()/invesment)*100))
-print("Biggest drawdown             : {:.2f}".format(min_lose))
+print("Biggest drawdown             : {:.2f}%".format(min_lose))
+print("Total number of Rounds       : {}".format(num_rounds))
 
 print("\nThanks to using ((Martingale))")
 
 
-trades.log("", 3)
+trades.log("", 2)
 trades.log("Total profit in this strategy: {:.2f}".format(trades.total_profit()))
 trades.log("APR                          : {:.2f}%".format((trades.total_profit()/invesment)*100))
-trades.log("Biggest drawdown             : {:.2f}".format(min_lose))
+trades.log("Biggest drawdown             : {:.2f}%".format(min_lose))
+trades.log("Total number of Rounds       : {}".format(num_rounds))
 

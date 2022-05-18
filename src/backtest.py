@@ -15,7 +15,7 @@ class TradesStructure():
     # Add new position
     def open(self, idx, price, amount):
         self.open_positions[idx] = [price, amount]
-        out_data = "(OPEN) {:.2f}$ in price {:.2f} ({:.2f})".format(amount, price, idx)
+        out_data = "(OPEN) {:.2f}$ in price {:.2f} ({})".format(amount, price, idx)
         self.log(out_data)
         print(out_data)
 
