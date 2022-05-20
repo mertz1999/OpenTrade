@@ -8,6 +8,7 @@ class TradesStructure():
         self.closed_positions = {} # [open_index, open_price, close_idx, close_price]
         self.profits          = [] # In $
         self.future_close     = {} # index : f_close_price
+        self.future_open      = {} # index: price, 
 
         path = "./inc/"+name+".txt"
         os.makedirs('./inc/', exist_ok=True)
@@ -94,6 +95,23 @@ class TradesStructure():
             print("Type is not corect. Set right one")
             exit()
     
+    # Used to open future by orded
+    def auto_open(self, Type, idx, price=0.0, amount=0.0, sell_price=0.0):
+        if Type == "ADD":
+            self.future_open[idx] = [price, amount, sell_price]
+        elif Type == "CHECK":
+            keys = self.future_open.copy().keys() 
+            for key in keys:
+                if self.future_open[key][0] >= price:
+                    self.open(idx, price, self.future_open[key][1])
+                    self.auto_close("ADD", self.future_open[key][2], idx)
+        else:
+            print("Input Type fot auto_buy is incorrect")
+            exit()
+        
+
+
+    
     # This function return a list of keys in open_position (indexes)
     def __key(self):
         return self.open_positions.copy().keys()
@@ -108,12 +126,17 @@ class TradesStructure():
 # balance = 500
 
 
-# trades = TradesStructure()
+trades = TradesStructure()
 
 # trades.open(5, 100, 500)
 # trades.auto_close("ADD", 150, 5)
 # trades.auto_close("CHECK", 200, 40)
 # trades.open(6, 110, 400)
+
+# trades.auto_open("ADD", 5, 100, 10, 150)
+# trades.auto_open("CHECK", 10, 80)
+# trades.auto_close("CHECK", 160, 15)
+
 
 # # print(trades.open_positions)
 
