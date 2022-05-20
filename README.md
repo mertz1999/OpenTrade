@@ -7,6 +7,6 @@ Implementation of some trading strategy with built in backtest
 - Set fee value to hole positions
 - Set volume 
 - Accumulate volume
-
+- Plotting
 
 # TODO Strategy
