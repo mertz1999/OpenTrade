@@ -4,9 +4,10 @@ import os
 
 class TradesStructure():
     def __init__(self, name='Temp_name') -> None:
-        self.open_positions   = {}
-        self.closed_positions = {} # [open_index, , open_price, close_idx, close_price]
-        self.profits          = []
+        self.open_positions   = {} # index : [price, amount]
+        self.closed_positions = {} # [open_index, open_price, close_idx, close_price]
+        self.profits          = [] # In $
+        self.future_close     = {} # index : f_close_price
 
         path = "./inc/"+name+".txt"
         os.makedirs('./inc/', exist_ok=True)
@@ -28,6 +29,8 @@ class TradesStructure():
     def close(self, open_idx, close_idx, close_price):
         open_price, amount = self.open_positions[open_idx]
         self.open_positions.pop(open_idx)
+        if open_idx in self.future_close:
+            self.future_close.pop(open_idx)
         self.closed_positions[open_idx] = [open_idx, open_price, close_idx, close_price]
         result = ((close_price - open_price) / open_price) * amount
         self.profits.append(result)
@@ -37,7 +40,7 @@ class TradesStructure():
 
     # Close all
     def close_all(self, close_idx, close_price):
-        keys = self.open_positions.copy().keys()
+        keys = self.__key()
         for key in keys:
             self.close(key, close_idx, close_price)
 
@@ -48,7 +51,7 @@ class TradesStructure():
     
     # Get total profit
     def total_online_profit(self, close_price):
-        keys = self.open_positions.copy().keys()
+        keys = self.__key()
         profits = 0
         for key in keys:
             open_price, amount = self.open_positions[key]
@@ -59,7 +62,7 @@ class TradesStructure():
 
     # Get total Investments
     def total_investment(self):
-        keys = self.open_positions.copy().keys()
+        keys = self.__key()
         total = 0
 
         for key in keys:
@@ -73,6 +76,30 @@ class TradesStructure():
         self.log_file.write(string)
         for i in range(num_enter):
             self.log_file.write('\n')
+    
+    # Used to close or add future sell 
+    def auto_close(self, Type, price=0.0, idx=0):
+        # Add new Item to future close list
+        if Type == "ADD":
+            self.future_close[idx] = price
+
+        # Check which position need to close
+        elif Type == "CHECK":
+            keys = self.future_close.copy().keys()
+            for key in keys:
+                if self.future_close[key] <= price:
+                    self.close(key, idx, price)
+
+        else:
+            print("Type is not corect. Set right one")
+            exit()
+    
+    # This function return a list of keys in open_position (indexes)
+    def __key(self):
+        return self.open_positions.copy().keys()
+
+
+
 
 
 
@@ -84,6 +111,8 @@ class TradesStructure():
 # trades = TradesStructure()
 
 # trades.open(5, 100, 500)
+# trades.auto_close("ADD", 150, 5)
+# trades.auto_close("CHECK", 200, 40)
 # trades.open(6, 110, 400)
 
 # # print(trades.open_positions)
