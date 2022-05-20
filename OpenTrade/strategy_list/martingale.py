@@ -1,16 +1,16 @@
 from ..strategy import *
 
 class Martingale(Strategy):
-    def __init__(self, take_profit, price_scale, safety_orders, invesment, data, name='Martingale'):
-        super().__init__(data, name)
+    def __init__(self, take_profit, price_scale, safety_orders, data,invesment, name='Martingale'):
+        super().__init__(data,invesment, name)
         self.take_profit   = take_profit
         self.price_scale   = price_scale
         self.safety_orders = safety_orders
-        self.invesment     = invesment
+        self.trades.invesment     = invesment
         self.min_lose = 0.0
         self.num_rounds = 0
 
-        share = self.invesment // (2 ** self.safety_orders)
+        share = self.trades.invesment // (2 ** self.safety_orders)
         self.Invertment_parts = [share]
 
         for i in range(self.safety_orders):
@@ -60,13 +60,13 @@ class Martingale(Strategy):
     def result_info(self):
         print("\n-------------------- Results --------------------")
         print("Total profit in this strategy : {:.2f}".format(self.trades.total_profit()))
-        print("APR                           : {:.2f}%".format((self.trades.total_profit()/self.invesment)*100))
+        print("APR                           : {:.2f}%".format((self.trades.total_profit()/self.trades.invesment)*100))
         print("Biggest drawdown              : {:.2f}%".format(self.min_lose))
         print("Total number of Rounds        : {}".format(self.num_rounds))
         print("\nThanks to using ((Martingale))")
 
         self.trades.log("", 2)
         self.trades.log("Total profit in this strategy : {:.2f}".format(self.trades.total_profit()))
-        self.trades.log("APR                           : {:.2f}%".format((self.trades.total_profit()/self.invesment)*100))
+        self.trades.log("APR                           : {:.2f}%".format((self.trades.total_profit()/self.trades.invesment)*100))
         self.trades.log("Biggest drawdown              : {:.2f}%".format(self.min_lose))
         self.trades.log("Total number of Rounds        : {}".format(self.num_rounds))

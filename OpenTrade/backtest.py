@@ -3,14 +3,15 @@ import numpy as np
 import os
 
 class TradesStructure():
-    def __init__(self, name='Temp_name') -> None:
+    def __init__(self, invesment, name='Temp_name') -> None:
         self.open_positions   = {} # index : [price, amount]
         self.closed_positions = {} # [open_index, open_price, close_idx, close_price]
         self.profits          = [] # In $
         self.future_close     = {} # index : f_close_price
         self.future_open      = {} # index: price, 
         self.open_flag        = False
-        self.close_flag       = [False, 0.0]
+        self.close_flag       = [False, 0.0, 0.0] # [FLAG, price, profit]
+        self.invesment        = invesment
 
         path = "./inc/"+name+".txt"
         os.makedirs('./inc/', exist_ok=True)
@@ -25,6 +26,7 @@ class TradesStructure():
     def open(self, idx, price, amount):
         self.open_positions[idx] = [price, amount]
         out_data = "(OPEN) {:.2f}$ in price {:.2f} ({})".format(amount, price, idx)
+        self.invesment -= amount
         self.log(out_data)
         print(out_data)
         self.open_flag = True
@@ -46,7 +48,8 @@ class TradesStructure():
         print(out_data)
 
         # Set close Flag
-        self.close_flag = [True, close_price]
+        self.invesment += (amount + result)
+        self.close_flag = [True, close_price, result]
 
     # Close all
     def close_all(self, close_idx, close_price):
