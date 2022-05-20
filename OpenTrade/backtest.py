@@ -126,7 +126,7 @@ class TradesStructure():
 # balance = 500
 
 
-trades = TradesStructure()
+# trades = TradesStructure()
 
 # trades.open(5, 100, 500)
 # trades.auto_close("ADD", 150, 5)
