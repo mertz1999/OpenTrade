@@ -9,6 +9,8 @@ class TradesStructure():
         self.profits          = [] # In $
         self.future_close     = {} # index : f_close_price
         self.future_open      = {} # index: price, 
+        self.open_flag        = False
+        self.close_flag       = [False, 0.0]
 
         path = "./inc/"+name+".txt"
         os.makedirs('./inc/', exist_ok=True)
@@ -25,6 +27,10 @@ class TradesStructure():
         out_data = "(OPEN) {:.2f}$ in price {:.2f} ({})".format(amount, price, idx)
         self.log(out_data)
         print(out_data)
+        self.open_flag = True
+
+        # Set Open flag
+        
 
     # Close a certain position
     def close(self, open_idx, close_idx, close_price):
@@ -38,6 +44,9 @@ class TradesStructure():
         out_data = "(CLOSE) Order closed with {:.1f}$ change at price {:.2f} ({})".format(result, close_price, open_idx)
         self.log(out_data)
         print(out_data)
+
+        # Set close Flag
+        self.close_flag = [True, close_price]
 
     # Close all
     def close_all(self, close_idx, close_price):
@@ -90,6 +99,7 @@ class TradesStructure():
             for key in keys:
                 if self.future_close[key] <= price:
                     self.close(key, idx, price)
+                    # self.future_close.pop(key)
 
         else:
             print("Type is not corect. Set right one")
@@ -105,6 +115,7 @@ class TradesStructure():
                 if self.future_open[key][0] >= price:
                     self.open(idx, price, self.future_open[key][1])
                     self.auto_close("ADD", self.future_open[key][2], idx)
+                    self.future_open.pop(key)
         else:
             print("Input Type fot auto_buy is incorrect")
             exit()
@@ -113,7 +124,7 @@ class TradesStructure():
 
     
     # This function return a list of keys in open_position (indexes)
-    def __key(self):
+    def key(self):
         return self.open_positions.copy().keys()
 
 

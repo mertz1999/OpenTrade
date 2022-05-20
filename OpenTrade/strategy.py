@@ -12,6 +12,9 @@ class Strategy():
     
     def run(self):
         for idx in range(len(self.data)):
+            self.trades.open_flag     = False
+            self.trades.close_flag[0] = False
+
             date        = self.data['date'][idx]
             open_price  = self.data['open'][idx]
             high_price  = self.data['high'][idx]
@@ -34,4 +37,4 @@ class Strategy():
     def result_info(self):
         pass
 
-        
+  

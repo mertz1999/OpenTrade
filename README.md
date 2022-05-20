@@ -6,8 +6,8 @@ Implementation of some trading strategy with built in backtest
 - <del>Make Auto buy at certain price</del>
 - Set fee value to hole positions
 - Set volume 
-- Accumulate volume
 - Plotting
+- Volume based backtest beside orderbased
 
 ### TODO Strategy
 - <del>Martinglae</del>
