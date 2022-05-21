@@ -11,4 +11,4 @@ Implementation of some trading strategy with built in backtest
 
 ### TODO Strategy
 - <del>Martinglae</del>
-- Grid Trafing
+- <del>Grid Trafing</del>

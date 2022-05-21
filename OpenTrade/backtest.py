@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 class TradesStructure():
-    def __init__(self, invesment, name='Temp_name') -> None:
+    def __init__(self, invesment, fee, name='Temp_name') -> None:
         self.open_positions   = {} # index : [price, amount]
         self.closed_positions = {} # [open_index, open_price, close_idx, close_price]
         self.profits          = [] # In $
@@ -12,6 +12,8 @@ class TradesStructure():
         self.open_flag        = False
         self.close_flag       = [False, 0.0, 0.0] # [FLAG, price, profit]
         self.invesment        = invesment
+        self.fee              = fee / 100
+        self.fees             = 0.0
 
         path = "./inc/"+name+".txt"
         os.makedirs('./inc/', exist_ok=True)
@@ -24,15 +26,22 @@ class TradesStructure():
 
     # Add new position
     def open(self, idx, price, amount):
-        self.open_positions[idx] = [price, amount]
-        out_data = "(OPEN) {:.2f}$ in price {:.2f} ({})".format(amount, price, idx)
+        amount_after_fee = amount - (self.fee * amount) 
+        self.open_positions[idx] = [price, amount_after_fee]
+
+        self.fees += (amount * self.fee)
+
+        # Log
+        out_data = "(OPEN) {:.2f}$ in price {:.2f} ({})".format(amount_after_fee, price, idx)
         self.invesment -= amount
         self.log(out_data)
         print(out_data)
-        self.open_flag = True
 
         # Set Open flag
-        
+        self.open_flag = True
+
+
+           
 
     # Close a certain position
     def close(self, open_idx, close_idx, close_price):
@@ -53,7 +62,7 @@ class TradesStructure():
 
     # Close all
     def close_all(self, close_idx, close_price):
-        keys = self.__key()
+        keys = self.key()
         for key in keys:
             self.close(key, close_idx, close_price)
 
@@ -64,8 +73,8 @@ class TradesStructure():
     
     # Get total profit
     def total_online_profit(self, close_price):
-        keys = self.__key()
-        profits = 0
+        keys = self.key()
+        profits = 0.0
         for key in keys:
             open_price, amount = self.open_positions[key]
             profit = ((close_price - open_price) / open_price) * amount
@@ -75,7 +84,7 @@ class TradesStructure():
 
     # Get total Investments
     def total_investment(self):
-        keys = self.__key()
+        keys = self.key()
         total = 0
 
         for key in keys:

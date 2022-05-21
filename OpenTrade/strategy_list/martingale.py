@@ -1,8 +1,8 @@
 from ..strategy import *
 
 class Martingale(Strategy):
-    def __init__(self, take_profit, price_scale, safety_orders, data,invesment, name='Martingale'):
-        super().__init__(data,invesment, name)
+    def __init__(self, take_profit, price_scale, safety_orders, data,invesment, fee,name='Martingale'):
+        super().__init__(data,invesment, fee, name)
         self.take_profit   = take_profit
         self.price_scale   = price_scale
         self.safety_orders = safety_orders

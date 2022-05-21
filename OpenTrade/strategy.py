@@ -4,11 +4,11 @@ from .backtest import *
 
 # Define Strategy Parent Class
 class Strategy():
-    def __init__(self,data, invesment,name='Martingale'):
+    def __init__(self,data, invesment, fee,name='Martingale'):
         self.name = name
         self.data = data
         self.params = self.get_params()
-        self.trades = TradesStructure(invesment, name=self.name)
+        self.trades = TradesStructure(invesment, fee,name=self.name)
     
     def run(self):
         for idx in range(len(self.data)):
