@@ -8,6 +8,7 @@ Implementation of some trading strategy with built in backtest
 - Set volume 
 - Plotting
 - Volume based backtest beside orderbased
+- Make plot
 
 ### TODO Strategy
 - <del>Martinglae</del>
