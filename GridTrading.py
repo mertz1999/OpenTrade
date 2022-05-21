@@ -2,7 +2,7 @@ from OpenTrade.strategy_list.grid_trading import GridTrading
 # import OpenTrade
 import pandas as pd
 
-data = pd.read_csv('./data/BTC_2020.csv')
+data = pd.read_csv('./data/BTC_2021.csv')
 data = pd.DataFrame(data.values[::-1], data.index, data.columns)
 
 
@@ -12,7 +12,7 @@ Low_price          = 10000
 num_grids          = 500 
 per_order          = 0.1
 investment         = 600
-fee                = 1        # In percent
+fee                = 0.1        # In percent
 max_open_positions = 8
 
 
