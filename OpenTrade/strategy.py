@@ -8,7 +8,7 @@ class Strategy():
         self.name = name
         self.data = data
         self.params = self.get_params()
-        self.trades = TradesStructure(invesment, fee,name=self.name)
+        self.trades = OrderBasedTrading(invesment, fee,name=self.name)
     
     def run(self):
         for idx in range(len(self.data)):

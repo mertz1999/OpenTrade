@@ -2,10 +2,9 @@ import pandas as pd
 import numpy as np
 import os
 
+
 class TradesStructure():
     def __init__(self, invesment, fee, name='Temp_name') -> None:
-        self.open_positions   = {} # index : [price, amount]
-        self.closed_positions = {} # [open_index, open_price, close_idx, close_price]
         self.profits          = [] # In $
         self.future_close     = {} # index : f_close_price
         self.future_open      = {} # index: price, 
@@ -20,11 +19,58 @@ class TradesStructure():
         self.log_file = open(path, "w")
 
 
-    
-    def __str__(self) -> str:
-        return "-------- New Structure has been made -------- \n"
-
     # Add new position
+    def open(self, idx, price, amount):
+        pass
+          
+
+    # Close a certain position
+    def close(self, open_idx, close_idx, close_price):
+        pass
+
+    # Close all
+    def close_all(self, close_idx, close_price):
+        pass
+
+    # Balance after backtest
+    def total_profit(self):
+        sum_profits = np.sum(self.profits)
+        return sum_profits
+    
+    # Get total profit
+    def total_online_profit(self, close_price):
+        pass
+
+    # Get total Investments
+    def total_investment(self):
+        pass
+
+    # Log function
+    def log(self,string, num_enter=1):
+        self.log_file.write(string)
+        for i in range(num_enter):
+            self.log_file.write('\n')
+    
+    # Used to close or add future sell 
+    def auto_close(self, Type, price=0.0, idx=0):
+        pass
+    
+    # Used to open future by orded
+    def auto_open(self, Type, idx, price=0.0, amount=0.0, sell_price=0.0):
+        pass
+        
+    
+
+# This Class is order based trading
+class OrderBasedTrading(TradesStructure):
+    def __init__(self, invesment, fee, name='Temp_name') -> None:
+        super().__init__(invesment, fee, name)
+
+        self.open_positions   = {} # index : [price, amount]
+        self.closed_positions = {} # [open_index, open_price, close_idx, close_price]
+
+    
+    # Open a Position
     def open(self, idx, price, amount):
         amount_after_fee = amount - (self.fee * amount) 
         self.open_positions[idx] = [price, amount_after_fee]
@@ -40,10 +86,7 @@ class TradesStructure():
         # Set Open flag
         self.open_flag = True
 
-
-           
-
-    # Close a certain position
+    # close an Order
     def close(self, open_idx, close_idx, close_price):
         open_price, amount = self.open_positions[open_idx]
         self.open_positions.pop(open_idx)
@@ -59,19 +102,15 @@ class TradesStructure():
         # Set close Flag
         self.invesment += (amount + result)
         self.close_flag = [True, close_price, result]
-
-    # Close all
+    
+    # Close all opening orders
     def close_all(self, close_idx, close_price):
         keys = self.key()
         for key in keys:
             self.close(key, close_idx, close_price)
-
-    # Balance after backtest
-    def total_profit(self):
-        sum_profits = np.sum(self.profits)
-        return sum_profits
+        return keys
     
-    # Get total profit
+    # Find total profit with all opening orders
     def total_online_profit(self, close_price):
         keys = self.key()
         profits = 0.0
@@ -82,7 +121,7 @@ class TradesStructure():
         
         return profits
 
-    # Get total Investments
+    # Find total of Invertment for all opening irders
     def total_investment(self):
         keys = self.key()
         total = 0
@@ -93,14 +132,8 @@ class TradesStructure():
         
         return total
 
-    # Log function
-    def log(self,string, num_enter=1):
-        self.log_file.write(string)
-        for i in range(num_enter):
-            self.log_file.write('\n')
-    
-    # Used to close or add future sell 
-    def auto_close(self, Type, price=0.0, idx=0):
+    # Set Auto close order function
+    def auto_close(self, Type, price=0, idx=0):
         # Add new Item to future close list
         if Type == "ADD":
             self.future_close[idx] = price
@@ -116,9 +149,9 @@ class TradesStructure():
         else:
             print("Type is not corect. Set right one")
             exit()
-    
-    # Used to open future by orded
-    def auto_open(self, Type, idx, price=0.0, amount=0.0, sell_price=0.0):
+
+    # Set Auto open function
+    def auto_open(self, Type, idx, price=0, amount=0, sell_price=0):
         if Type == "ADD":
             self.future_open[idx] = [price, amount, sell_price]
         elif Type == "CHECK":
@@ -131,14 +164,13 @@ class TradesStructure():
         else:
             print("Input Type fot auto_buy is incorrect")
             exit()
-        
+
+     
 
 
-    
     # This function return a list of keys in open_position (indexes)
     def key(self):
         return self.open_positions.copy().keys()
-
 
 
 
