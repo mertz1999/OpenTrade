@@ -4,12 +4,15 @@ from .backtest import *
 
 # Define Strategy Parent Class
 class Strategy():
-    def __init__(self,data, invesment, fee,name='Martingale'):
+    def __init__(self,data, invesment, fee,name='Martingale', method="ORDER"):
         self.name = name
         self.data = data
         self.params = self.get_params()
-        self.trades = OrderBasedTrading(invesment, fee,name=self.name)
-    
+        if method == "ORDER":
+            self.trades = OrderBasedTrading(invesment, fee,name=self.name)
+        elif method == "VOLUME":
+            self.trades = OrderBasedTrading(invesment, fee,name=self.name)
+            
     def run(self):
         for idx in range(len(self.data)):
             self.trades.open_flag     = False

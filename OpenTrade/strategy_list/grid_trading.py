@@ -3,8 +3,8 @@ from matplotlib.pyplot import close
 from ..strategy import *
 
 class GridTrading(Strategy):
-    def __init__(self, high_thresh, low_thresh, num_grids, inv_percent, max_open_positions, data, invesment, fee, name='Martingale'):
-        super().__init__(data, invesment, fee, name)
+    def __init__(self, high_thresh, low_thresh, num_grids, inv_percent, max_open_positions, data, invesment, fee, name='Martingale', method="ORDER"):
+        super().__init__(data, invesment, fee, name, method)
         self.high_thresh = high_thresh
         self.low_thresh  = low_thresh
         self.num_grids   = num_grids
