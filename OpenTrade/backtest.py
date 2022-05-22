@@ -22,11 +22,7 @@ class TradesStructure():
     # Add new position
     def open(self, idx, price, amount):
         pass
-          
 
-    # Close a certain position
-    def close(self, open_idx, close_idx, close_price):
-        pass
 
     # Close all
     def close_all(self, close_idx, close_price):
@@ -174,16 +170,72 @@ class OrderBasedTrading(TradesStructure):
 
 
 
+class VolumeBasedTrading(TradesStructure):
+    def __init__(self, invesment, fee, name='Temp_name') -> None:
+        super().__init__(invesment, fee, name)
+
+        self.open_volume = 0.0
+        self.closed_positions = {} # {close_idx, close_price, amount}
+
+    # Buy funtion
+    def open(self, idx, price, amount):
+        amount_after_fee = amount-(self.fee * amount)
+        vol = (amount_after_fee) / price
+        self.open_volume += vol
+        self.fees += (amount * self.fee)
+
+        # Log
+        out_data = "(OPEN) {:.2f}$ in price {:.2f} ({})".format(amount_after_fee, price, idx)
+        print(out_data)
+        self.log(out_data)
+
+        self.invesment -= amount
+        self.open_flag = True
+
+    # sell fnuction
+    def close(self, close_idx, close_price, amount):
+        vol = amount / close_price
+        self.open_volume -= vol 
+
+        out_data = "(CLOSE) {:.2f} sell at price {:.2f} ({})".format(vol, close_price, close_idx)
+        print(out_data)
+        self.log(out_data)
+
+        self.invesment += amount
+        self.close_flag = [True, close_price, vol]
+
+    # Sell all thing
+    def close_all(self, close_idx, close_price):
+        amount = close_price * self.open_volume
+        temp = self.open_volume
+        self.open_volume = 0.0
+
+        self.invesment += amount
+
+        out_data = "(CLOSE) {:.2f} sell at price {:.2f} ({})".format(temp, close_price, close_idx)
+        print(out_data)
+        self.log(out_data)
+    
+    # Find total profit of all volume
+    def total_online_profit(self, close_price):
+        return self.open_volume * close_price 
+
+
+    
 
 
 
 
-# balance = 500
+
+balance = 500
 
 
-# trades = TradesStructure()
+trades = VolumeBasedTrading(500, 0.1, )
 
-# trades.open(5, 100, 500)
+trades.open(5, 100, 500)
+print(trades.open_volume)
+trades.close_all(10, 120)
+print(trades.invesment)
 # trades.auto_close("ADD", 150, 5)
 # trades.auto_close("CHECK", 200, 40)
 # trades.open(6, 110, 400)
