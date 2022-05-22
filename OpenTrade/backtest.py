@@ -185,7 +185,7 @@ class VolumeBasedTrading(TradesStructure):
         self.fees += (amount * self.fee)
 
         # Log
-        out_data = "(OPEN) {:.2f}$ in price {:.2f} ({})".format(amount_after_fee, price, idx)
+        out_data = "(OPEN)  {:.2f}$ in price {:.2f} ({})".format(amount_after_fee, price, idx)
         print(out_data)
         self.log(out_data)
 
@@ -193,16 +193,16 @@ class VolumeBasedTrading(TradesStructure):
         self.open_flag = True
 
     # sell fnuction
-    def close(self, close_idx, close_price, amount):
+    def sell(self, close_idx, close_price, amount):
         vol = amount / close_price
         self.open_volume -= vol 
 
-        out_data = "(CLOSE) {:.2f} sell at price {:.2f} ({})".format(vol, close_price, close_idx)
+        out_data = "(CLOSE) {:.2f}$ sell at price {:.2f} ({})".format(amount, close_price, close_idx)
         print(out_data)
         self.log(out_data)
 
         self.invesment += amount
-        self.close_flag = [True, close_price, vol]
+        self.close_flag = [True, close_price, amount]
 
     # Sell all thing
     def close_all(self, close_idx, close_price):
@@ -227,15 +227,15 @@ class VolumeBasedTrading(TradesStructure):
 
 
 
-balance = 500
+# balance = 500
 
 
-trades = VolumeBasedTrading(500, 0.1, )
+# trades = VolumeBasedTrading(500, 0.1, )
 
-trades.open(5, 100, 500)
-print(trades.open_volume)
-trades.close_all(10, 120)
-print(trades.invesment)
+# trades.open(5, 100, 500)
+# print(trades.open_volume)
+# trades.close_all(10, 120)
+# print(trades.invesment)
 # trades.auto_close("ADD", 150, 5)
 # trades.auto_close("CHECK", 200, 40)
 # trades.open(6, 110, 400)

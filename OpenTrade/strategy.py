@@ -11,8 +11,8 @@ class Strategy():
         if method == "ORDER":
             self.trades = OrderBasedTrading(invesment, fee,name=self.name)
         elif method == "VOLUME":
-            self.trades = OrderBasedTrading(invesment, fee,name=self.name)
-            
+            self.trades = VolumeBasedTrading(invesment, fee,name=self.name)
+
     def run(self):
         for idx in range(len(self.data)):
             self.trades.open_flag     = False

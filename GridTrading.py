@@ -16,5 +16,5 @@ fee                = 0.1        # In percent
 max_open_positions = 8
 
 
-st = GridTrading(High_price , Low_price, num_grids, per_order, max_open_positions,data,investment, fee, name="Grid-Trading")
+st = GridTrading(High_price , Low_price, num_grids, per_order, max_open_positions,data,investment, fee, name="Grid-Trading", method="ORDER")
 st.run()
