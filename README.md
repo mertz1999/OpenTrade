@@ -5,9 +5,9 @@ Implementation of some trading strategy with built in backtest
 - <del>Make Auto sell at certain price</del>
 - <del>Make Auto buy at certain price</del>
 - <del>Set fee value to hole positions</del>
-- Set volume 
+- <del>Set volume </del>
 - Plotting
-- Volume based backtest beside orderbased
+- <del>Volume based backtest beside orderbased</del>
 - Make plot
 
 ### TODO Strategy
