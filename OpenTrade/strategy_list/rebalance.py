@@ -24,12 +24,16 @@ class Rebalance():
         self.total_profit_value = 0.0
         self.period             = period
         self.start              = False
+        self.symbol             = [data_side['symbol'][10] for data_side in data]
 
         # Define Each side of balancing
         self.sides_coin = []
         for index, side_data in enumerate(data):
-            self.sides_coin.append(OneSideRebalancing(side_data, invesment/self.total_coins, fee, name="Rebalancing_"+str(index), method=method))
+            self.sides_coin.append(OneSideRebalancing(side_data, invesment/self.total_coins, fee, name="Rebalancing_"+self.symbol[index], method=method))
 
+        # path = "./inc/"+name+".txt"
+        # os.makedirs('./inc/', exist_ok=True)
+        self.log_file_2 = open("temp.txt", "w")
         
         # Iterate on each data points of one point and find datas that are same time
         for idx in range(len(self.data[0])):
@@ -62,20 +66,26 @@ class Rebalance():
                 self.total_profit_value = []
                 for index_side, side in enumerate(self.sides_coin):
                     self.total_profit_value.append(side.trades.total_online_profit(close_price_sides[index_side]))
-
-                print("Total Value: ", sum(self.total_profit_value))
+                
+                self.log_file_2.write(str(sum(self.total_profit_value)))
+                self.log_file_2.write('\n')
 
                 # Check for total profit that reaches max threshold 
                 if  sum(self.total_profit_value) > (self.start_invest + self.max_profit):
-                    print("End of bot traing (Reach Take profit)")
+                    print("\nEnd of bot trading (Reach Take profit)")
                     for index_side, side in enumerate(self.sides_coin): 
+                        print("("+self.symbol[index_side]+")", end=' ')
+                        print("({}) ".format(str(date)), end=' ')
                         side.trades.close_all(idx, close_price_sides[index_side])
                     break
 
                 # For First one that bot is 
                 if self.start == False:
+                    print("-------- BOT IS STARTING --------\n")
                     self.start = True
                     for index_side, side in enumerate(self.sides_coin): 
+                        print("("+self.symbol[index_side]+")", end=' ')
+                        print("({}) ".format(str(date)), end=' ')
                         side.trades.open(idx, close_price_sides[index_side], side.trades.invesment)
 
                     continue
@@ -89,15 +99,20 @@ class Rebalance():
 
                         # Sell if balance is lower
                         if balaced_value < self.total_profit_value[index_side]:
+                            print("("+self.symbol[index_side]+")", end=' ')
+                            print("({}) ".format(str(date)), end=' ')
                             side.trades.sell(idx, close_price_sides[index_side], abs(balaced_value - self.total_profit_value[index_side]))
 
                         # Buy if balance is higher
                         else:
+                            print("("+self.symbol[index_side]+")", end=' ')
+                            print("({}) ".format(str(date)), end=' ')
                             side.trades.open(idx, close_price_sides[index_side], abs(balaced_value - self.total_profit_value[index_side]))
                         
 
         print("\n ---------- Result -----------")
         print("Total value after bot: ", sum(self.total_profit_value))
+
 
     
 
