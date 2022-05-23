@@ -28,7 +28,7 @@ print(len(BTC_data), len(ETH_data))
 fee = 0.1
 investment = 500
 
-total_profit = 50
+max_profit = 100
 num_transactions = 1000
 
-st = Rebalance([BTC_data, ETH_data],investment, fee, name="Grid-Trading", method="VOLUME")
+st = Rebalance(10, max_profit,[ETH_data, BTC_data],investment, fee, name="Grid-Trading", method="VOLUME")

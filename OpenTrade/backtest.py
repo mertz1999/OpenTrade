@@ -212,7 +212,7 @@ class VolumeBasedTrading(TradesStructure):
 
         self.invesment += amount
 
-        out_data = "(CLOSE) {:.2f} sell at price {:.2f} ({})".format(temp, close_price, close_idx)
+        out_data = "(CLOSE) {:.2f} sell at price {:.2f} ({})".format(amount, close_price, close_idx)
         print(out_data)
         self.log(out_data)
     
