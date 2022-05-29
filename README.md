@@ -13,5 +13,6 @@ Implementation of some trading strategy with built in backtest
 ### TODO Strategy
 - <del>Martinglae</del>
 - <del>Grid Trafing</del>
-- Rebalancing
+- <del>Rebalancing</del>
+- InfinityGrids
 
