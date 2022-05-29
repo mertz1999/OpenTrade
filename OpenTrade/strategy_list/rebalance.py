@@ -78,7 +78,7 @@ class Rebalance():
                         print("({}) ".format(str(date)), end=' ')
                         side.trades.close_all(idx, close_price_sides[index_side])
                     break
-
+ 
                 # For First one that bot is 
                 if self.start == False:
                     print("-------- BOT IS STARTING --------\n")
