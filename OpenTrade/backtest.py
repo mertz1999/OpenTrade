@@ -169,7 +169,7 @@ class OrderBasedTrading(TradesStructure):
         return self.open_positions.copy().keys()
 
 
-
+# This Class is Volume based trading
 class VolumeBasedTrading(TradesStructure):
     def __init__(self, invesment, fee, name='Temp_name') -> None:
         super().__init__(invesment, fee, name)

@@ -26,6 +26,7 @@ class Strategy():
 
             self.trades.auto_close("CHECK", close_price, idx)
             self.trades.auto_open("CHECK", idx, close_price)
+            
             self.algo(idx=idx, date=date, open_price=open_price, high_price=high_price, low_price=low_price, close_price=close_price)
 
         self.result_info()

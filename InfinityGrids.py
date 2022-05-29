@@ -12,7 +12,7 @@ data['symbol']  = 'BTC'
 fee = 0.1
 investment   = 500
 lowest_price = 1000
-PPG          = 0.5  # In % (Profit-Per-Grid)
+PPG          = 1  # In % (Profit-Per-Grid)
 
 
 st = InfinityGrids(lowest_price, PPG, data, investment, fee, name="Infinity_grids", method="VOLUME")
