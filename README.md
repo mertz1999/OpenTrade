@@ -14,5 +14,5 @@ Implementation of some trading strategy with built in backtest
 - <del>Martinglae</del>
 - <del>Grid Trafing</del>
 - <del>Rebalancing</del>
-- InfinityGrids
-
+- <del>InfinityGrids</del>
+- Smart Trade
