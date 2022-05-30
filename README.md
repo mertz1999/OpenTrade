@@ -15,4 +15,4 @@ Implementation of some trading strategy with built in backtest
 - <del>Grid Trafing</del>
 - <del>Rebalancing</del>
 - <del>InfinityGrids</del>
-- Smart Trade
+- <del>Smart Trade</del>
