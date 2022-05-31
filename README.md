@@ -9,7 +9,7 @@ Implementation of some trading strategy with built in backtest
 - Plotting
 - <del>Volume based backtest beside orderbased</del>
 - Make plot
-- Future trading
+- <del>Future trading</del>
 - Leverage
 
 ### TODO Strategy
