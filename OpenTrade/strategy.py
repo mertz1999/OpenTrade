@@ -15,6 +15,8 @@ class Strategy():
             self.trades = VolumeBasedTrading(invesment, fee,name=self.name)
             self.open_list = []
             self.close_list = [[0,0.0]]
+        elif method == "ORDER-FUTURE":
+            self.trades = OrderBasedFutureTrading(invesment, fee, name=self.name)
 
         self.end = False
 

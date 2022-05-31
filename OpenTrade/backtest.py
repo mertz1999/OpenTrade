@@ -6,8 +6,6 @@ import os
 class TradesStructure():
     def __init__(self, invesment, fee, name='Temp_name') -> None:
         self.profits          = [] # In $
-        self.future_close     = {} # index : f_close_price
-        self.future_open      = {} # index: price, 
         self.open_flag        = False
         self.close_flag       = [False, 0.0, 0.0] # [FLAG, price, profit]
         self.invesment        = invesment
@@ -20,7 +18,7 @@ class TradesStructure():
 
 
     # Add new position
-    def open(self, idx, price, amount):
+    def open(self, idx, price, amount, type="buy"):
         pass
 
 
@@ -61,7 +59,8 @@ class TradesStructure():
 class OrderBasedTrading(TradesStructure):
     def __init__(self, invesment, fee, name='Temp_name') -> None:
         super().__init__(invesment, fee, name)
-
+        self.future_close     = {} # index : f_close_price
+        self.future_open      = {} # index: price, 
         self.open_positions   = {} # index : [price, amount]
         self.closed_positions = {} # [open_index, open_price, close_idx, close_price]
 
@@ -221,8 +220,146 @@ class VolumeBasedTrading(TradesStructure):
         return self.open_volume * close_price 
 
 
-    
+# This Class is order based trading with future trading
+class OrderBasedFutureTrading(TradesStructure):
+    def __init__(self, invesment, fee, name='Temp_name') -> None:
+        super().__init__(invesment, fee, name)
 
+        self.open_positions   = {} # index : [price, amount, type]
+        self.closed_positions = {} # [open_index, open_price, close_idx, close_price]
+        self.future_close     = {} # index : f_close_price
+        self.future_open      = {} # index: [price, amount, target_price, type]
+
+    
+    # Open a Position
+    def open(self, idx, price, amount, type='buy'):
+        amount_after_fee = amount - (self.fee * amount) 
+        self.open_positions[idx] = [price, amount_after_fee, type]
+
+        self.fees += (amount * self.fee)
+
+        # Log
+        out_data = "(OPEN) ({}) {:.2f}$ in price {:.2f} ({})".format(type.upper,amount_after_fee, price, idx)
+        self.invesment -= amount
+        self.log(out_data)
+        print(out_data)
+
+        # Set Open flag
+        self.open_flag = True
+
+    # close an Order
+    def close(self, open_idx, close_idx, close_price):
+        # Get order data
+        open_price, amount, type = self.open_positions[open_idx]
+
+        # Remove order from open positions
+        self.open_positions.pop(open_idx)
+
+        # Check for future close
+        if open_idx in self.future_close:
+            self.future_close.pop(open_idx)
+
+        # Save log in closed_positions variable
+        self.closed_positions[open_idx] = [open_idx, open_price, close_idx, close_price]
+
+        # Check for profits in this order
+        if type == 'buy':
+            result = ((close_price - open_price) / open_price) * amount
+        elif type == 'sell':
+            result = ((open_price - close_price) / open_price) * amount
+
+        # Save prifits
+        self.profits.append(result)
+
+        out_data = "(CLOSE) ({}) Order closed with {:.1f}$ change at price {:.2f} ({})".format(type.upper(), result, close_price, open_idx)
+        self.log(out_data)
+        print(out_data)
+
+        # Set close Flag
+        self.invesment += (amount + result)
+        self.close_flag = [True, close_price, result]
+    
+    # Close all opening orders
+    def close_all(self, close_idx, close_price):
+        keys = self.key()
+        for key in keys:
+            self.close(key, close_idx, close_price)
+    
+    # Find total profit with all opening orders
+    def total_online_profit(self, close_price):
+        keys = self.key()
+        profits = 0.0
+        for key in keys:
+            open_price, amount, type = self.open_positions[key]
+            if type == 'buy':
+                profit = ((close_price - open_price) / open_price) * amount
+            elif type == 'sell':
+                profit = ((open_price - close_price) / open_price) * amount
+            profits += profit 
+        
+        return profits
+
+    # Find total of Invertment for all opening irders
+    def total_investment(self):
+        keys = self.key()
+        total = 0
+
+        for key in keys:
+            _, amount, _ = self.open_positions[key]
+            total += amount 
+        
+        return total
+
+    # Set Auto close order function
+    def auto_close(self, Type, price=0, idx=0):
+        # Add new Item to future close list
+        if Type == "ADD":
+            self.future_close[idx] = price
+
+        # Check which position need to close
+        elif Type == "CHECK":
+            keys = self.future_close.copy().keys()
+            for key in keys:
+                _,_,type = self.open_positions[key]
+                # If reach targets for buy
+                if self.future_close[key] <= price and type == 'buy':
+                    self.close(key, idx, price)
+                # If reach targets for sell
+                elif self.future_close[key] >= price and type == 'sell':
+                    self.close(key, idx, price)
+
+        else:
+            print("Type is not corect. Set right one")
+            exit()
+
+    # Set Auto open function
+    def auto_open(self, Type, idx, price=0.0, amount=0.0, target_price=0.0, close_price=0.0,type='buy'):
+        if Type == "ADD":
+            direction = +1 if price > close_price else -1
+            self.future_open[idx] = [price, amount, target_price, type, direction]
+        elif Type == "CHECK":
+            keys = self.future_open.copy().keys() 
+            for key in keys:
+                # If Direction is +
+                if self.future_open[key][4] == +1:
+                    if self.future_open[key][0] <= close_price:
+                        self.open(idx, price, self.future_open[key][1], self.future_open[key][3])
+                        self.auto_close("ADD", self.future_open[key][2], idx)
+                        self.future_open.pop(key)
+                # If Direction is -
+                elif self.future_open[key][4] == -1:
+                    if self.future_open[key][0] >= close_price:
+                        self.open(idx, price, self.future_open[key][1], self.future_open[key][3])
+                        self.auto_close("ADD", self.future_open[key][2], idx)
+                        self.future_open.pop(key)
+        else:
+            print("Input Type fot auto_buy is incorrect")
+            exit()
+
+     
+    # This function return a list of keys in open_position (indexes)
+    def key(self):
+        return self.open_positions.copy().keys()
 
 
 
@@ -230,14 +367,15 @@ class VolumeBasedTrading(TradesStructure):
 # balance = 500
 
 
-# trades = VolumeBasedTrading(500, 0.1, )
+# trades = OrderBasedFutureTrading(500, 0.1, )
 
-# trades.open(5, 100, 500)
-# print(trades.open_volume)
+# trades.open(5, 100, 500, 'sell')
+# print(trades.open_positions)
+# trades.close(5, 10, 90)
 # trades.close_all(10, 120)
 # print(trades.invesment)
-# trades.auto_close("ADD", 150, 5)
-# trades.auto_close("CHECK", 200, 40)
+# trades.auto_close("ADD", 90, 5)
+# trades.auto_close("CHECK", 89, 40)
 # trades.open(6, 110, 400)
 
 # trades.auto_open("ADD", 5, 100, 10, 150)
