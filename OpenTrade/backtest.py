@@ -239,7 +239,7 @@ class OrderBasedFutureTrading(TradesStructure):
         self.fees += (amount * self.fee)
 
         # Log
-        out_data = "(OPEN) ({}) {:.2f}$ in price {:.2f} ({})".format(type.upper,amount_after_fee, price, idx)
+        out_data = "(OPEN) ({}) {:.2f}$ in price {:.2f} ({})".format(type.upper(),amount_after_fee, price, idx)
         self.invesment -= amount
         self.log(out_data)
         print(out_data)
