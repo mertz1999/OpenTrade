@@ -15,7 +15,7 @@ f_rate['date'] = pd.to_datetime(f_rate['date'])
 
 
 fee              = 0.1
-investment       = 10000
+investment       = 500
 
 
 st = SpotFuture(f_rate, data, investment, fee, name="Spot_Future", method="ORDER-FUTURE")
