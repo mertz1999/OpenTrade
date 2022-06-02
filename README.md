@@ -18,3 +18,4 @@ Implementation of some trading strategy with built in backtest
 - <del>Rebalancing</del>
 - <del>InfinityGrids</del>
 - <del>Smart Trade</del>
+- <del>Spot Future</del>

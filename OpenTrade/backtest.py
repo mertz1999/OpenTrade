@@ -52,6 +52,7 @@ class TradesStructure():
     # Used to open future by orded
     def auto_open(self, Type, idx, price=0.0, amount=0.0, sell_price=0.0):
         pass
+
         
     
 

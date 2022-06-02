@@ -68,4 +68,7 @@ class Strategy():
     def result_info(self):
         pass
 
+    def print_date(date):
+        print("({})".format(date), end=" ")
+
   
