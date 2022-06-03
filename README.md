@@ -18,6 +18,7 @@ OpenTrade is an open source project that consist of Popular strategies and backt
 - Rebalance
 - SmartTrade
 - Spot-Future arbintage
+- TWAP
 
 > Some strtegies are implemented based on [Pionex blog page](https://www.pionex.com/blog/)
 
@@ -68,6 +69,7 @@ st.run()
 - <del>InfinityGrids</del>
 - <del>Smart Trade</del>
 - <del>Spot Future</del>
+- <del>TWAP</del>
 
 
 
