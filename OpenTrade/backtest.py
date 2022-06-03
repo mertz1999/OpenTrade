@@ -154,7 +154,8 @@ class OrderBasedTrading(TradesStructure):
             for key in keys:
                 if self.future_open[key][0] >= price:
                     self.open(idx, price, self.future_open[key][1])
-                    self.auto_close("ADD", self.future_open[key][2], idx)
+                    if sell_price != 0:
+                        self.auto_close("ADD", self.future_open[key][2], idx)
                     self.future_open.pop(key)
         else:
             print("Input Type fot auto_buy is incorrect")
