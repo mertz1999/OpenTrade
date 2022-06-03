@@ -54,8 +54,6 @@ class TradesStructure():
         pass
 
         
-    
-
 # This Class is order based trading
 class OrderBasedTrading(TradesStructure):
     def __init__(self, invesment, fee, name='Temp_name') -> None:
@@ -81,6 +79,7 @@ class OrderBasedTrading(TradesStructure):
 
         # Set Open flag
         self.open_flag = True
+    
 
     # close an Order
     def close(self, open_idx, close_idx, close_price):
@@ -191,6 +190,7 @@ class VolumeBasedTrading(TradesStructure):
 
         self.invesment -= amount
         self.open_flag = True
+
 
     # sell fnuction
     def sell(self, close_idx, close_price, amount):
