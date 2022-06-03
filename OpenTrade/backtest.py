@@ -161,9 +161,6 @@ class OrderBasedTrading(TradesStructure):
             print("Input Type fot auto_buy is incorrect")
             exit()
 
-     
-
-
     # This function return a list of keys in open_position (indexes)
     def key(self):
         return self.open_positions.copy().keys()
@@ -176,6 +173,7 @@ class VolumeBasedTrading(TradesStructure):
 
         self.open_volume = 0.0
         self.closed_positions = {} # {close_idx, close_price, amount}
+        self.future_open = {}
 
     # Buy funtion
     def open(self, idx, price, amount):
@@ -220,6 +218,33 @@ class VolumeBasedTrading(TradesStructure):
     # Find total profit of all volume
     def total_online_profit(self, close_price):
         return self.open_volume * close_price 
+
+    # Set Auto open function
+    def auto_open(self, Type, idx, price=0.0, amount=0.0, target_price=0.0, close_price=0.0):
+        if Type == "ADD":
+            direction = +1 if price > close_price else -1
+            self.future_open[idx] = [price, amount, target_price, direction]
+        elif Type == "CHECK":
+            keys = self.future_open.copy().keys() 
+            for key in keys:
+                # If Direction is +
+                if self.future_open[key][3] == +1:
+                    # If close price reaches target in +1 direction
+                    if self.future_open[key][0] <= close_price:
+                        self.open(idx, price, self.future_open[key][1])
+                        # self.auto_close("ADD", self.future_open[key][2], idx)
+                        self.future_open.pop(key)
+                # If Direction is -
+                elif self.future_open[key][3] == -1:
+                    # If close price reaches target in -1 direction
+                    if self.future_open[key][0] >= close_price:
+                        self.open(idx, price, self.future_open[key][1])
+                        # self.auto_close("ADD", self.future_open[key][2], idx)
+                        self.future_open.pop(key)
+        else:
+            print("Input Type fot auto_buy is incorrect")
+            exit()
+
 
 
 # This Class is order based trading with future trading
