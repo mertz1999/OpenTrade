@@ -26,6 +26,7 @@ class InfinityGrids(Strategy):
     def algo(self, *args, **kwargs):
         idx             = kwargs['idx']
         close_price     = kwargs['close_price']
+        date            = kwargs['date']
         self.last_price = close_price
 
         self.saved_list.append(self.saved)
@@ -35,6 +36,7 @@ class InfinityGrids(Strategy):
 
         # Buy when bot is running
         if self.trades.open_volume == 0:
+            self.trades.log("({}) ".format(date), 0)
             self.trades.open(idx, close_price, self.invest)
             self.base_price = close_price
 
@@ -46,6 +48,7 @@ class InfinityGrids(Strategy):
             # find different
             diff = self.trades.total_online_profit(close_price) - self.invest
             # sell surplus
+            self.trades.log("({}) ".format(date), 0)
             self.trades.sell(idx, close_price, diff)
             # change saved value
             self.saved += diff
@@ -58,6 +61,7 @@ class InfinityGrids(Strategy):
             # find different
             diff = self.invest - self.trades.total_online_profit(close_price)
             # Buy surplus
+            self.trades.log("({}) ".format(date), 0)
             self.trades.open(idx, close_price, diff)
             # Change saved value
             self.saved -= diff 
