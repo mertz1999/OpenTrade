@@ -18,7 +18,7 @@ class ReverseGrid(Strategy):
 
         self.invest_copy   = self.trades.invesment
 
-        self.grid_levels = [level for level in range(low_thresh, high_thresh, (high_thresh-low_thresh)//num_grids)]
+        self.grid_levels = [level for level in range(low_thresh, high_thresh, (high_thresh-low_thresh)//num_grids)][::-1]
         self.grid_period = (high_thresh-low_thresh)//num_grids
 
         
@@ -35,43 +35,64 @@ class ReverseGrid(Strategy):
     def algo(self, *args, **kwargs):
         idx         = kwargs['idx']
         close_price = kwargs['close_price']
+        date        = kwargs['date']
 
         # For first running
         if (len(self.trades.open_positions) == 0):
-            
             for level_idx, level in enumerate(self.grid_levels):
-                if (level >= close_price):
+                if (level <= close_price):
                     break
-            
+
             self.trades.future_open = {}
-            self.trades.auto_open("ADD", idx, level, self.amount, self.grid_levels[level_idx+1])
+            self.trades.auto_open(
+                "ADD", 
+                idx, 
+                self.grid_levels[level_idx-1], 
+                self.amount, 
+                self.grid_levels[level_idx], 
+                close_price, 
+                type='sell'
+                )
                        
         else:
             # if self.invesment - self.invest > 0:
-                # Check When a position is opened
+
+            # Check When a position is opened
             if self.trades.open_flag == True:
+                print(date)
                 self.trades.log(str(self.trades.invesment), 1)
                 if (len(self.trades.open_positions) < self.max_open_positions) and (close_price < self.high_thresh) and (close_price > self.low_thresh):
                     max_key = max(self.trades.key())
+                    for level_idx, level in enumerate(self.grid_levels):
+                        if (level <= close_price):
+                            break
                     self.trades.auto_open(
                         "ADD", 
                         idx, 
-                        self.trades.open_positions[max_key][0]-self.grid_period, 
+                        self.grid_levels[level_idx-1],
                         self.amount, 
-                        self.trades.open_positions[max_key][0]
+                        self.grid_levels[level_idx],
+                        close_price,
+                        type='sell'
                     )
 
             # Check a position is closed
             if self.trades.close_flag[0] == True:
+                print(date)
                 self.trades.log(str(self.trades.invesment), 1)
                 self.trades.future_open = {}
                 if (close_price < self.high_thresh) and (close_price > self.low_thresh):
+                    for level_idx, level in enumerate(self.grid_levels):
+                        if (level <= close_price):
+                            break
                     self.trades.auto_open(
                         "ADD",
                         idx,
-                        self.trades.close_flag[1],
+                        self.grid_levels[level_idx-1],
                         self.amount,
-                        self.trades.close_flag[1] + self.grid_period
+                        self.grid_levels[level_idx],
+                        close_price,
+                        type='sell'
                     )
 
 

@@ -16,4 +16,4 @@ max_open_positions = 8
 
 
 st = ReverseGrid(High_price , Low_price, num_grids, per_order, max_open_positions,data,investment, fee, name="ReverseGrid", method="ORDER-FUTURE")
-# st.run()
+st.run()

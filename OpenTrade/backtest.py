@@ -338,10 +338,10 @@ class OrderBasedFutureTrading(TradesStructure):
         return total
 
     # Set Auto close order function
-    def auto_close(self, Type, price=0, idx=0):
+    def auto_close(self, Type, price=0, idx=0, type='buy'):
         # Add new Item to future close list
         if Type == "ADD":
-            self.future_close[idx] = price
+            self.future_close[idx] = [price, type]
 
         # Check which position need to close
         elif Type == "CHECK":
@@ -349,10 +349,10 @@ class OrderBasedFutureTrading(TradesStructure):
             for key in keys:
                 _,_,type = self.open_positions[key]
                 # If reach targets for buy
-                if self.future_close[key] <= price and type == 'buy':
+                if self.future_close[key][0] <= price and self.future_close[key][1] == 'buy':
                     self.close(key, idx, price)
                 # If reach targets for sell
-                elif self.future_close[key] >= price and type == 'sell':
+                elif self.future_close[key][0] >= price and self.future_close[key][1] == 'sell':
                     self.close(key, idx, price)
 
         else:
@@ -370,14 +370,14 @@ class OrderBasedFutureTrading(TradesStructure):
                 # If Direction is +
                 if self.future_open[key][4] == +1:
                     if self.future_open[key][0] <= close_price:
-                        self.open(idx, price, self.future_open[key][1], self.future_open[key][3])
-                        self.auto_close("ADD", self.future_open[key][2], idx)
+                        self.open(idx, close_price, self.future_open[key][1], self.future_open[key][3])
+                        self.auto_close("ADD", self.future_open[key][2], idx, self.future_open[key][3])
                         self.future_open.pop(key)
                 # If Direction is -
                 elif self.future_open[key][4] == -1:
                     if self.future_open[key][0] >= close_price:
-                        self.open(idx, price, self.future_open[key][1], self.future_open[key][3])
-                        self.auto_close("ADD", self.future_open[key][2], idx)
+                        self.open(idx, close_price, self.future_open[key][1], self.future_open[key][3])
+                        self.auto_close("ADD", self.future_open[key][2], idx, self.future_open[key][3])
                         self.future_open.pop(key)
         else:
             print("Input Type fot auto_buy is incorrect")

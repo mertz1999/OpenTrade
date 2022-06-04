@@ -8,6 +8,7 @@ class Strategy():
         self.name = name
         self.data = data
         self.params = self.get_params()
+        self.method = method
         if method == "ORDER":
             self.trades = OrderBasedTrading(invesment, fee,name=self.name)
         elif method == "VOLUME":
@@ -33,11 +34,18 @@ class Strategy():
             low_price   = self.data['low'][idx]
             close_price = self.data['close'][idx]
 
-            self.trades.auto_close("CHECK", close_price, idx)
-            self.trades.auto_open("CHECK", idx, close_price)
+            if self.method == "ORDER-FUTURE":
+                self.trades.auto_close("CHECK", close_price, idx)
+                self.trades.auto_open("CHECK", idx, close_price, 0.0, close_price, close_price)
+            else:
+                self.trades.auto_close("CHECK", close_price, idx)
+                self.trades.auto_open("CHECK", idx, close_price)
 
             self.algo(idx=idx, date=date, open_price=open_price, high_price=high_price, low_price=low_price, close_price=close_price)
         
+
+        print(self.trades.future_close)
+
         self.result_info()
         self.trades.log_file.close()
 
