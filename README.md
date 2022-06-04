@@ -70,6 +70,7 @@ st.run()
 - <del>Smart Trade</del>
 - <del>Spot Future</del>
 - <del>TWAP</del>
+- <del>Reverse Grid</del>
 
 
 
