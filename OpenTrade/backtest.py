@@ -128,7 +128,7 @@ class OrderBasedTrading(TradesStructure):
         return total
 
     # Set Auto close order function
-    def auto_close(self, Type, price=0, idx=0):
+    def auto_close(self, Type, price=0.0, idx=0):
         # Add new Item to future close list
         if Type == "ADD":
             self.future_close[idx] = price
@@ -146,7 +146,7 @@ class OrderBasedTrading(TradesStructure):
             exit()
 
     # Set Auto open function
-    def auto_open(self, Type, idx, price=0, amount=0, sell_price=0):
+    def auto_open(self, Type, idx, price=0.0, amount=0.0, sell_price=0.0):
         if Type == "ADD":
             self.future_open[idx] = [price, amount, sell_price]
         elif Type == "CHECK":
@@ -154,9 +154,9 @@ class OrderBasedTrading(TradesStructure):
             for key in keys:
                 if self.future_open[key][0] >= price:
                     self.open(idx, price, self.future_open[key][1])
-                    if sell_price != 0:
+                    if self.future_open[key][2] != 0:
                         self.auto_close("ADD", self.future_open[key][2], idx)
-                    self.future_open.pop(key)
+                        self.future_open.pop(key)
         else:
             print("Input Type fot auto_buy is incorrect")
             exit()

@@ -53,4 +53,5 @@ class Strategy():
     def print_date(date):
         print("({})".format(date), end=" ")
 
+
   
