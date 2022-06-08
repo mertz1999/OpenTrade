@@ -44,7 +44,7 @@ class Strategy():
             self.algo(idx=idx, date=date, open_price=open_price, high_price=high_price, low_price=low_price, close_price=close_price)
         
 
-        print(self.trades.future_close)
+        # print(self.trades.future_close)
 
         self.result_info()
         self.trades.log_file.close()

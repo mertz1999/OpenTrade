@@ -19,6 +19,8 @@ OpenTrade is an open source project that consist of Popular strategies and backt
 - SmartTrade
 - Spot-Future arbintage
 - TWAP
+- Reverse Grid
+- Trailing Buy/Sell
 
 > Some strtegies are implemented based on [Pionex blog page](https://www.pionex.com/blog/)
 
@@ -51,7 +53,6 @@ st.run()
 ### [See Strategies Doc](https://github.com/mertz1999/OpenTrade/tree/main/Doc)
 
 # Todo:
-##### Todo Feature and fix bug:
 - <del>Make Auto sell at certain price</del>
 - <del>Make Auto buy at certain price</del>
 - <del>Set fee value to hole positions</del>
@@ -62,15 +63,6 @@ st.run()
 - <del>Future trading</del>
 - Leverage
 
-##### Todo Strategy:
-- <del>Martinglae</del>
-- <del>Grid Trafing</del>
-- <del>Rebalancing</del>
-- <del>InfinityGrids</del>
-- <del>Smart Trade</del>
-- <del>Spot Future</del>
-- <del>TWAP</del>
-- <del>Reverse Grid</del>
 
 
 
